@@ -1,6 +1,6 @@
 class nagios::server {
 
-  package { ["nagios","nagios-plugins","nagios-plugins-nrpe"]:
+  package { ["nagios","nagios-plugins","nagios-plugins-nrpe", "perl-Net-SNMP"]:
     ensure => installed,
   }
 
@@ -9,6 +9,25 @@ class nagios::server {
     enable  => true,
     require => Exec['change_cfg_rights'],
   }
+
+  file {'commands.cfg':
+    ensure  => present,
+    path    => '/etc/nagios/conf.d/commands.cfg',
+    owner   => 'nagios',
+    group   => 'nagios',
+    source  => 'puppet:///modules/nagios/commands.cfg',
+    require => [ Package['nagios'], File['conf-d'] ]
+  }
+
+  file {'hostgroups.cfg':
+    ensure  => present,
+    path    => '/etc/nagios/conf.d/hostgroups.cfg',
+    owner   => 'nagios',
+    group   => 'nagios',
+    source  => 'puppet:///modules/nagios/hostgroups.cfg',
+    require => [ Package['nagios'], File['conf-d'] ]
+  }
+
 
   # This is because puppet writes the config files using the root user: nagios can't read them
   exec {'change_cfg_rights':

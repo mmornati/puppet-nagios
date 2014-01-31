@@ -1,16 +1,7 @@
 class nagios::default {
 
-  package { ['nagios-plugins-fping', 'nagios-plugins-disk',
-  'nagios-plugins-users', 'nagios-plugins-ping', 'nagios-plugins-time',
-  'nagios-plugins-load', 'nagios-plugins-ssh', 'nagios-plugins-http',
-  'nagios-plugins-procs']:
-    ensure => latest
-  }
-
-  @@nagios_hostgroup { 'demo-servers':
-    ensure => present,
-    alias  => 'Demo Servers HostGroup',
-    target => '/etc/nagios/conf.d/hostgroups.cfg',
+  package { ['nagios-plugins-fping', 'nagios-plugins-ping']:
+    ensure => installed
   }
 
   @@nagios_host { $::fqdn:
@@ -30,67 +21,40 @@ class nagios::default {
     target              => "/etc/nagios/conf.d/host_services_${::fqdn}.cfg"
    }
 
-   @@nagios_service { "check_root_partition_${hostname}":
-    check_command       => "check_local_disk!20%!10%!/",
+   @@nagios_service { "check_disks_${hostname}":
+    check_command       => "check_snmp_disk!public!20%!10%",
     use                 => "generic-service",
     host_name           => "$fqdn",
     notification_period => "24x7",
-    service_description => "${hostname}_check_root_partition",
+    service_description => "${hostname}_check_disks",
+    target              => "/etc/nagios/conf.d/host_services_${::fqdn}.cfg"
+   }
+ 
+   @@nagios_service { "check_load_${hostname}":
+    check_command       => "check_snmp_load!public!85%!90%!/",
+    use                 => "generic-service",
+    host_name           => "$fqdn",
+    notification_period => "24x7",
+    service_description => "${hostname}_check_load",
+    target              => "/etc/nagios/conf.d/host_services_${::fqdn}.cfg"
+   }
+
+   @@nagios_service { "check_memory_${hostname}":
+    check_command       => "check_snmp_memory!public!85!95",
+    use                 => "generic-service",
+    host_name           => "$fqdn",
+    notification_period => "24x7",
+    service_description => "${hostname}_check_memory",
     target              => "/etc/nagios/conf.d/host_services_${::fqdn}.cfg"
    }
    
-   @@nagios_service { "check_home_partition_${hostname}":
-    check_command       => "check_local_disk!20%!10%!/home/",
-    use                 => "generic-service",
-    host_name           => "$fqdn",
-    notification_period => "24x7",
-    service_description => "${hostname}_check_home_partition",
-    target              => "/etc/nagios/conf.d/host_services_${::fqdn}.cfg"
-   }
-   
-   @@nagios_service { "check_current_users_${hostname}":
-    check_command       => "check_local_users!20!50",
-    use                 => "generic-service",
-    host_name           => "$fqdn",
-    notification_period => "24x7",
-    service_description => "${hostname}_check_current_users",
-    target              => "/etc/nagios/conf.d/host_services_${::fqdn}.cfg"
-   }
-
-   @@nagios_service { "check_total_processes_${hostname}":
-    check_command       => "check_local_procs!20!40!R",
-    use                 => "generic-service",
-    host_name           => "$fqdn",
-    notification_period => "24x7",
-    service_description => "${hostname}_check_total_processes",
-    target              => "/etc/nagios/conf.d/host_services_${::fqdn}.cfg"
-   }
-
-   @@nagios_service { "check_current_load_${hostname}":
-    check_command       => "check_local_load!5.0,4.0,3.0!10.0,6.0,4.0",
-    use                 => "generic-service",
-    host_name           => "$fqdn",
-    notification_period => "24x7",
-    service_description => "${hostname}_check_current_load",
-    target              => "/etc/nagios/conf.d/host_services_${::fqdn}.cfg"
-   }
-
    @@nagios_service { "check_swap_${hostname}":
-    check_command       => "check_local_swap!20!10",
+    check_command       => "check_snmp_swap!!public!50!70",
     use                 => "generic-service",
     host_name           => "$fqdn",
     notification_period => "24x7",
     service_description => "${hostname}_check_swap",
     target              => "/etc/nagios/conf.d/host_services_${::fqdn}.cfg"
    }
-
-   @@nagios_service { "check_ssh_service_${hostname}":
-    check_command       => "check_ssh",
-    use                 => "generic-service",
-    host_name           => "$fqdn",
-    notification_period => "24x7",
-    service_description => "${hostname}_check_ssh_service",
-    target              => "/etc/nagios/conf.d/host_services_${::fqdn}.cfg"
-   }
-
+   
 }

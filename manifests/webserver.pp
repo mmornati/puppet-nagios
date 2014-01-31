@@ -1,11 +1,5 @@
 class nagios::webserver {
 
-  @@nagios_hostgroup { 'web-servers':
-    ensure => present,
-    alias  => 'Apache WebServers HostGroup',
-    target => '/etc/nagios/conf.d/hostgroups.cfg',
-  }
-
   @@nagios_service { "check_http_service_${hostname}":
     check_command       => "check_http",
     use                 => "generic-service",
