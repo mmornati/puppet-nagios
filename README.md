@@ -39,6 +39,13 @@ node1 {
 }
 ```
 
+```
+node2 {
+    include nagios::default
+    include nagios::webserver
+}
+```
+
 You will have automatic generated file (on your nagios server) for any node you
 configured. For example, for any host, you will have a file named ''/etc/nagios/conf.d/host_node1.demo.lan.cfg'' containing
 information like:
