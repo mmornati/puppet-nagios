@@ -49,7 +49,7 @@ class nagios::default {
    }
    
    @@nagios_service { "check_swap_${hostname}":
-    check_command       => "check_snmp_swap!!public!50!70",
+    check_command       => "check_snmp_swap!public!50!70",
     use                 => "generic-service",
     host_name           => "$fqdn",
     notification_period => "24x7",
