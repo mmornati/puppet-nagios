@@ -7,10 +7,16 @@ class nagios::default {
     ensure => latest
   }
 
+  nagios_hostgroup { 'demo-servers':
+    ensure => present,
+    alias  => 'Demo Servers HostGroup',
+    target => '/etc/nagios/conf.d/hostgroups.cfg',
+  }
+
   @@nagios_host { $::fqdn:
     address       => $::ipaddress,
     check_command => 'check-host-alive!3000.0,80%!5000.0,100%!10',
-    hostgroups    => 'linux-servers',
+    hostgroups    => 'demo-servers',
     target        => "/etc/nagios/conf.d/host_${::fqdn}.cfg",
     max_check_attempts => "3",
   }
@@ -52,7 +58,7 @@ class nagios::default {
    }
 
    @@nagios_service { "check_total_processes_${hostname}":
-    check_command       => "check_total_processes!20%!10%!/",
+    check_command       => "check_local_procs!20!40!R",
     use                 => "generic-service",
     host_name           => "$fqdn",
     notification_period => "24x7",
@@ -83,7 +89,7 @@ class nagios::default {
     use                 => "generic-service",
     host_name           => "$fqdn",
     notification_period => "24x7",
-    service_description => "${hostname}_check_total_processes",
+    service_description => "${hostname}_check_ssh_service",
     target              => "/etc/nagios/conf.d/host_services_${::fqdn}.cfg"
    }
 
@@ -92,7 +98,7 @@ class nagios::default {
     use                 => "generic-service",
     host_name           => "$fqdn",
     notification_period => "24x7",
-    service_description => "${hostname}_check_total_processes",
+    service_description => "${hostname}_check_http_service",
     target              => "/etc/nagios/conf.d/host_services_${::fqdn}.cfg"
    }
 
