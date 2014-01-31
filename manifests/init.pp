@@ -23,7 +23,7 @@ class nagios::server {
     require => Package['nagios'],
   }
 
-  # Collect the nagios_host resources
+  # Collect all nagios resources
   Nagios_host <<||>> {
     require => File[conf-d],
     notify  => [Exec['change_cfg_rights'], Service[nagios]],
@@ -33,4 +33,15 @@ class nagios::server {
     require => File[conf-d],
     notify  => [Exec['change_cfg_rights'], Service[nagios]],
   }
+  
+  Nagios_servicegroup <<||>> {
+    require => File[conf-d],
+    notify  => [Exec['change_cfg_rights'], Service[nagios]],
+  }
+
+  Nagios_hostgroup <<||>> {
+    require => File[conf-d],
+    notify  => [Exec['change_cfg_rights'], Service[nagios]],
+  }
+
 }

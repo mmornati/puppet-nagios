@@ -7,7 +7,7 @@ class nagios::default {
     ensure => latest
   }
 
-  nagios_hostgroup { 'demo-servers':
+  @@nagios_hostgroup { 'demo-servers':
     ensure => present,
     alias  => 'Demo Servers HostGroup',
     target => '/etc/nagios/conf.d/hostgroups.cfg',
