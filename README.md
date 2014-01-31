@@ -47,7 +47,7 @@ node2 {
 ```
 
 You will have automatic generated file (on your nagios server) for any node you
-configured. For example, for any host, you will have a file named ''/etc/nagios/conf.d/host_node1.demo.lan.cfg'' containing
+configured. For example, for any host, you will have a file named **/etc/nagios/conf.d/host_node1.demo.lan.cfg** containing
 information like:
 
 ```
@@ -62,6 +62,6 @@ define host {
         max_check_attempts             3
 }
 ```
-and another file for services (''host_services_node1.demo.lan.cfg'')
+and another file for services (**host_services_node1.demo.lan.cfg**)
 and the nagios service, if any chages are made, it will be automatically restarted.
 
