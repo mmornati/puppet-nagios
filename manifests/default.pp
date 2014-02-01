@@ -40,20 +40,11 @@ class nagios::default {
    }
 
    @@nagios_service { "check_memory_${hostname}":
-    check_command       => "check_snmp_memory!public!85!95",
+    check_command       => "check_snmp_mem!public!85,50!95,60",
     use                 => "generic-service",
     host_name           => "$fqdn",
     notification_period => "24x7",
     service_description => "${hostname}_check_memory",
-    target              => "/etc/nagios/conf.d/host_services_${::fqdn}.cfg"
-   }
-   
-   @@nagios_service { "check_swap_${hostname}":
-    check_command       => "check_snmp_swap!public!50!70",
-    use                 => "generic-service",
-    host_name           => "$fqdn",
-    notification_period => "24x7",
-    service_description => "${hostname}_check_swap",
     target              => "/etc/nagios/conf.d/host_services_${::fqdn}.cfg"
    }
    
