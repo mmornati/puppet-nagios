@@ -40,7 +40,7 @@ class nagios::default {
    }
 
    @@nagios_service { "check_memory_${hostname}":
-    check_command       => "check_snmp_mem!public!85,50!95,60",
+    check_command       => "check_snmp_memory!public!85,50!95,60",
     use                 => "generic-service",
     host_name           => "$fqdn",
     notification_period => "24x7",

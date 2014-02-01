@@ -32,7 +32,7 @@ class nagios::server {
   # This is because puppet writes the config files using the root user: nagios can't read them
   exec {'change_cfg_rights':
     command => "/bin/find /etc/nagios -type f -name '*cfg' -exec chmod 644 {} \;",
-    require => Package['nagios']
+    require => [ Package['nagios'], File["conf-d"], File["commands.cfg"], File["hostgroups.cfg"]  ]
   }
 
   file { 'conf-d':
